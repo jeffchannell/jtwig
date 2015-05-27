@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="majic" default="help" basedir=".">
+	<target name="help" description="Display detailed usage information">
+		<h1>Build file for JTwig</h1>
+		<h2>Targets</h2>
+		<l1>build  -  compiles an installable package</l1>
+		<l2>build.plugin.system  -  builds just the system plugin package</l2>
+		<l1>clean  -  cleans the build folder</l1>
+		<l1>help  -  you're looking at it</l1>
+		<h2>Setup</h2>
+		<echo>Custom properties (exe.phpunit, etc) can be set in the file user.properties.</echo>
+	</target>
+	
+	<property file="build.properties" />
+	<property file="user.properties" />
+	
+	<property name="zip.plugin.system.name" value="plg_system_jtwig.zip"/>
+	
+	<property name="zip.plugin.system" value="${dir.build}/${zip.plugin.system.name}"/>
+	
+	<!-- system plugin files -->
+	<fileset id="files.plugin.system.main" dir="${dir.plugins}/system/jtwig">
+		<include name="jtwig.php" />
+		<include name="jtwig.xml" />
+		<include name="Twig/" />
+		<exclude name="**.git" />
+	</fileset>
+	<!-- system plugin language en-GB -->
+	<fileset id="files.plugin.system.language.en" dir="${dir.plugins}/system/jtwig/languages/en-GB">
+		<include name="en-GB.plg_system_jtwig.sys.ini" />
+		<exclude name="**.git" />
+	</fileset>
+	<!-- all system plugin files -->
+	<union id="files.plugin.system">
+		<resources refid="files.plugin.system.main" />
+		<resources refid="files.plugin.system.language.en" />
+	</union>
+	
+	<!-- checks a resource for updates -->
+	<macrodef name="checkresource">
+		<attribute name="property" />
+		<attribute name="targetfile" />
+		<attribute name="refid" />
+		<sequential>
+			<uptodate property="@{property}" targetfile="@{targetfile}">
+				<srcresources refid="@{refid}" />
+			</uptodate>
+		</sequential>
+	</macrodef>
+	
+	<!-- prints a header -->
+	<macrodef name="h1">
+		<text name="text" />
+		<sequential>
+			<echo>#======================================================================</echo>
+			<echo>#  @{text}</echo>
+			<echo>#======================================================================</echo>
+		</sequential>
+	</macrodef>
+	
+	<!-- prints a header -->
+	<macrodef name="h2">
+		<text name="text" />
+		<sequential>
+			<echo>+----------------------------------------</echo>
+			<echo>|   @{text}</echo>
+			<echo>+----------------------------------------</echo>
+		</sequential>
+	</macrodef>
+	
+	<!-- prints a list item -->
+	<macrodef name="l1">
+		<text name="text" />
+		<sequential>
+			<echo>*  @{text}</echo>
+		</sequential>
+	</macrodef>
+	
+	<!-- prints a list item -->
+	<macrodef name="l2">
+		<text name="text" />
+		<sequential>
+			<echo>   *  @{text}</echo>
+		</sequential>
+	</macrodef>
+	
+	<!-- Clean -->
+	<target name="clean" description="Destroys all generated files and dirs.">
+		<delete dir="${dir.build}"/>
+	</target>
+	
+	<!-- Build -->
+	<target name="build">
+		<h1>Building JTwig Packages...</h1>
+		<antcall target="build.plugin.system" />
+	</target>
+	
+	<!-- Build System Plugin -->
+	<target name="build.plugin.system" depends="-check.plugin.system" unless="skip.plugin.system"
+		description="Builds the system plugin package">
+		<echo>Building system plugin...</echo>
+		<zip destfile="${zip.plugin.system}">
+			<fileset refid="files.plugin.system.main" />
+			<zipfileset refid="files.plugin.system.language.en" prefix="languages/en-GB" />
+		</zip>
+	</target>
+	
+	<!-- Check System Plugin -->
+	<target name="-check.plugin.system">
+		<checkresource property="skip.plugin.system" targetfile="${zip.plugin.system}" refid="files.plugin.system" />
+	</target>
+	
+</project>
