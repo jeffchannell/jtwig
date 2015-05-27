@@ -189,5 +189,6 @@ class PlgSystemJtwig extends JPlugin
 		$twig->addFunction(new Twig_SimpleFunction('JRoute', array('JRoute', '_')));
 		$twig->addFunction(new Twig_SimpleFunction('JText', array('JText', '_')));
 		$twig->addFunction(new Twig_SimpleFunction('Jsprintf', array('JText', 'sprintf')));
+		$twig->addFunction(new Twig_SimpleFunction('JHtml', array('JHtml', '_')));
 	}
 }
