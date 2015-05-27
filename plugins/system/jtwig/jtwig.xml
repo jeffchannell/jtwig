@@ -195,6 +195,7 @@
 			<fieldset name="basic">
 				<field name="process_site" type="radio" default="1"
 					label="PLG_SYSTEM_JTWIG_PROCESS_SITE"
+					hint="PLG_SYSTEM_JTWIG_PROCESS_SITE_DESC"
 					description="PLG_SYSTEM_JTWIG_PROCESS_SITE_DESC"
 					class="btn-group btn-group-yesno"
 				>
@@ -203,11 +204,23 @@
 				</field>
 				<field name="process_admin" type="radio" default="0"
 					label="PLG_SYSTEM_JTWIG_PROCESS_ADMIN"
+					hint="PLG_SYSTEM_JTWIG_PROCESS_ADMIN_DESC"
 					description="PLG_SYSTEM_JTWIG_PROCESS_ADMIN_DESC"
 					class="btn-group btn-group-yesno"
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
+				</field>
+				<field name="optimizations" type="list" default="OPTIMIZE_ALL"
+					label="PLG_SYSTEM_JTWIG_OPTIMIZATIONS"
+					hint="PLG_SYSTEM_JTWIG_OPTIMIZATIONS_DESC"
+					description="PLG_SYSTEM_JTWIG_OPTIMIZATIONS_DESC"
+				>
+					<option value="OPTIMIZE_NONE">OPTIMIZE_NONE</option>
+					<option value="OPTIMIZE_ALL">OPTIMIZE_ALL</option>
+					<option value="OPTIMIZE_FOR">OPTIMIZE_FOR</option>
+					<option value="OPTIMIZE_RAW_FILTER">OPTIMIZE_RAW_FILTER</option>
+					<option value="OPTIMIZE_VAR_ACCESS">OPTIMIZE_VAR_ACCESS</option>
 				</field>
 			</fieldset>
 		</fields>

@@ -40,6 +40,18 @@ class PlgSystemJtwig extends JPlugin
 	static protected $data;
 	
 	/**
+	 * Simple function wrappers
+	 * 
+	 * @var array
+	 */
+	static protected $wrappers = array(
+		'JRoute'   => array('JRoute', '_'),
+		'JText'    => array('JText', '_'),
+		'Jsprintf' => array('JText', 'sprintf'),
+		'JHtml'    => array('JHtml', '_')
+	);
+	
+	/**
 	 * Override constructor to initialize Twig
 	 * 
 	 * @param type $subject
@@ -180,15 +192,19 @@ class PlgSystemJtwig extends JPlugin
 	protected function addTwigExtensions(Twig_Environment &$twig)
 	{
 		$twig->addExtension(new Twig_Extension_Escaper('html'));
-		$twig->addExtension(new Twig_Extension_Optimizer(Twig_NodeVisitor_Optimizer::OPTIMIZE_ALL));
+		$twig->addExtension(new Twig_Extension_Optimizer(constant('Twig_NodeVisitor_Optimizer::' . $this->params->get('optimizations', 'OPTIMIZE_ALL'))));
 		if (defined('JDEBUG') && JDEBUG)
 		{
 			$twig->addExtension(new Twig_Extension_Debug());
 		}
 		// easy core wrappers, see Twig docs for further details
-		$twig->addFunction(new Twig_SimpleFunction('JRoute', array('JRoute', '_')));
-		$twig->addFunction(new Twig_SimpleFunction('JText', array('JText', '_')));
-		$twig->addFunction(new Twig_SimpleFunction('Jsprintf', array('JText', 'sprintf')));
-		$twig->addFunction(new Twig_SimpleFunction('JHtml', array('JHtml', '_')));
+		foreach (static::$wrappers as $function => $callable)
+		{
+			if (!is_callable($callable))
+			{
+				continue;
+			}
+			$twig->addFunction(new Twig_SimpleFunction($function, $callable));
+		}
 	}
 }
